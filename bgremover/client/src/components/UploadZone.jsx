@@ -5,8 +5,7 @@ export default function UploadZone({ appState, originalUrl, onUpload, onRemoveBg
   const inputRef = useRef(null)
 
   const handleDrop = useCallback((e) => {
-    e.preventDefault()
-    setDragging(false)
+    e.preventDefault(); setDragging(false)
     const file = e.dataTransfer.files?.[0]
     if (file) onUpload(file)
   }, [onUpload])
@@ -21,156 +20,111 @@ export default function UploadZone({ appState, originalUrl, onUpload, onRemoveBg
   const hasImage     = appState === 'uploading'
 
   return (
-    <section style={{ padding: '0 28px 72px', maxWidth: 960, margin: '0 auto' }}>
-      <input
-        ref={inputRef}
-        id="upload-trigger"
-        type="file"
-        accept="image/jpeg,image/png,image/webp"
-        style={{ display: 'none' }}
-        onChange={handleFileChange}
-      />
+    <section style={{ padding: '0 20px 60px', maxWidth: 960, margin: '0 auto', width: '100%', boxSizing: 'border-box' }}>
+      <input ref={inputRef} id="upload-trigger" type="file"
+        accept="image/jpeg,image/png,image/webp" style={{ display: 'none' }} onChange={handleFileChange} />
 
       {/* Empty dropzone */}
       {!hasImage && !isProcessing && (
-        <div
-          className="fade-up"
+        <div className="fade-up"
           onDragOver={e => { e.preventDefault(); setDragging(true) }}
           onDragLeave={() => setDragging(false)}
           onDrop={handleDrop}
           onClick={() => inputRef.current?.click()}
           style={{
             border: `2px dashed ${dragging ? 'var(--accent)' : 'var(--border-2)'}`,
-            borderRadius: 'var(--r-xl)',
-            padding: '72px 48px',
-            display: 'flex', flexDirection: 'column', alignItems: 'center', gap: 20,
+            borderRadius: 'var(--r-xl)', padding: 'clamp(40px, 8vw, 72px) 24px',
+            display: 'flex', flexDirection: 'column', alignItems: 'center', gap: 18,
             cursor: 'pointer', textAlign: 'center',
-            background: dragging
-              ? 'var(--accent-light)'
-              : 'linear-gradient(135deg, var(--surface) 0%, var(--surface-2) 100%)',
+            background: dragging ? 'var(--accent-light)' : 'linear-gradient(135deg, var(--surface) 0%, var(--surface-2) 100%)',
             transition: 'all 0.2s',
             boxShadow: dragging ? `0 0 0 4px var(--accent-glow), var(--s)` : 'var(--s-sm)',
-          }}
-        >
-          {/* Upload icon */}
+          }}>
           <div style={{
-            width: 80, height: 80, borderRadius: 22,
+            width: 72, height: 72, borderRadius: 20,
             background: dragging ? 'var(--accent)' : 'var(--surface-3)',
-            display: 'flex', alignItems: 'center', justifyContent: 'center',
-            transition: 'all 0.2s',
+            display: 'flex', alignItems: 'center', justifyContent: 'center', transition: 'all 0.2s',
             boxShadow: dragging ? '0 6px 20px var(--accent-glow)' : 'none',
           }}>
-            <svg width="36" height="36" viewBox="0 0 24 24" fill="none"
+            <svg width="32" height="32" viewBox="0 0 24 24" fill="none"
               stroke={dragging ? '#fff' : 'var(--ink-3)'} strokeWidth="1.5">
               <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/>
-              <polyline points="17 8 12 3 7 8"/>
-              <line x1="12" y1="3" x2="12" y2="15"/>
+              <polyline points="17 8 12 3 7 8"/><line x1="12" y1="3" x2="12" y2="15"/>
             </svg>
           </div>
-
           <div>
-            <p style={{ fontSize: 18, fontWeight: 700, color: 'var(--ink)', fontFamily: 'var(--font-d)', marginBottom: 8 }}>
+            <p style={{ fontSize: 'clamp(15px,4vw,18px)', fontWeight: 700, color: 'var(--ink)', fontFamily: 'var(--font-d)', marginBottom: 8 }}>
               {dragging ? 'Drop it here!' : 'Drop your image here'}
             </p>
             <p style={{ fontSize: 14, color: 'var(--ink-3)' }}>
-              or <span style={{ color: 'var(--accent)', fontWeight: 700, textDecoration: 'underline', textUnderlineOffset: 3 }}>click to browse</span>
-              {' '}— JPG, PNG, WebP up to 25 MB
+              or <span style={{ color: 'var(--accent)', fontWeight: 700 }}>tap to browse</span> · JPG, PNG, WebP · max 25 MB
             </p>
           </div>
-
           <div style={{ display: 'flex', gap: 8, flexWrap: 'wrap', justifyContent: 'center' }}>
-            {['Product Photos', 'Portraits', 'Logos', 'ID Photos', 'E-commerce'].map(t => (
+            {['Product Photos', 'Portraits', 'Logos', 'ID Photos'].map(t => (
               <span key={t} style={{
-                padding: '5px 12px', borderRadius: 99,
+                padding: '4px 12px', borderRadius: 99,
                 background: 'var(--surface)', border: '1px solid var(--border)',
                 fontSize: 12, color: 'var(--ink-2)', fontWeight: 500,
-                boxShadow: 'var(--s-xs)',
               }}>{t}</span>
             ))}
           </div>
         </div>
       )}
 
-      {/* Image uploaded — preview + actions */}
+      {/* Image uploaded */}
       {(hasImage || isProcessing) && (
-        <div className="fade-up" style={{
-          display: 'grid', gridTemplateColumns: '1fr 280px', gap: 20,
-        }}>
+        <div className="fade-up grid-two">
           {/* Image preview card */}
           <div className="card" style={{ overflow: 'hidden' }}>
             <div style={{
-              padding: '14px 20px', borderBottom: '1px solid var(--border)',
+              padding: '12px 18px', borderBottom: '1px solid var(--border)',
               display: 'flex', alignItems: 'center', justifyContent: 'space-between',
             }}>
-              <div style={{ display: 'flex', alignItems: 'center', gap: 10 }}>
+              <div style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
                 <div style={{
                   width: 8, height: 8, borderRadius: '50%',
                   background: isProcessing ? 'var(--accent)' : 'var(--green)',
-                  boxShadow: isProcessing ? '0 0 8px var(--accent-glow)' : '0 0 6px rgba(22,163,74,0.4)',
                   animation: isProcessing ? 'pulse 1s ease-in-out infinite' : 'none',
                 }}/>
-                <span style={{ fontSize: 14, fontWeight: 600, color: 'var(--ink)' }}>
+                <span style={{ fontSize: 14, fontWeight: 600 }}>
                   {isProcessing ? 'Processing with AI…' : 'Image Ready'}
                 </span>
               </div>
               {!isProcessing && (
-                <button className="btn btn-ghost btn-sm" onClick={() => inputRef.current?.click()}>
-                  Change
-                </button>
+                <button className="btn btn-ghost btn-sm" onClick={() => inputRef.current?.click()}>Change</button>
               )}
             </div>
 
-            {/* Image */}
             <div style={{
-              minHeight: 360, display: 'flex', alignItems: 'center', justifyContent: 'center',
-              padding: 28, background: 'var(--surface-2)', position: 'relative',
+              minHeight: 280, display: 'flex', alignItems: 'center', justifyContent: 'center',
+              padding: 20, background: 'var(--surface-2)', position: 'relative',
             }}>
-              <img
-                src={originalUrl}
-                alt="Upload"
-                style={{
-                  maxWidth: '100%', maxHeight: 380, objectFit: 'contain', display: 'block',
-                  borderRadius: 10, boxShadow: 'var(--s)',
-                  opacity: isProcessing ? 0.4 : 1, transition: 'opacity 0.3s',
-                }}
-              />
+              <img src={originalUrl} alt="Upload" style={{
+                maxWidth: '100%', maxHeight: 340, objectFit: 'contain', display: 'block',
+                borderRadius: 10, boxShadow: 'var(--s)',
+                opacity: isProcessing ? 0.4 : 1, transition: 'opacity 0.3s',
+              }}/>
               {isProcessing && (
                 <div style={{
-                  position: 'absolute', inset: 0,
-                  display: 'flex', flexDirection: 'column',
-                  alignItems: 'center', justifyContent: 'center', gap: 20,
+                  position: 'absolute', inset: 0, display: 'flex', flexDirection: 'column',
+                  alignItems: 'center', justifyContent: 'center', gap: 16,
                 }}>
-                  {/* Animated loader */}
-                  <div style={{ position: 'relative', width: 64, height: 64 }}>
+                  <div style={{ position: 'relative', width: 56, height: 56 }}>
                     <div style={{
                       position: 'absolute', inset: 0,
-                      border: '3px solid var(--border)',
-                      borderTop: '3px solid var(--accent)',
+                      border: '3px solid var(--border)', borderTop: '3px solid var(--accent)',
                       borderRadius: '50%', animation: 'spin .7s linear infinite',
                     }}/>
                     <div style={{
                       position: 'absolute', inset: 10,
-                      border: '2px solid transparent',
-                      borderTop: '2px solid rgba(232,101,42,0.4)',
+                      border: '2px solid transparent', borderTop: '2px solid rgba(232,101,42,0.4)',
                       borderRadius: '50%', animation: 'spin 1.2s linear infinite reverse',
                     }}/>
-                    <div style={{
-                      position: 'absolute', inset: 0,
-                      display: 'flex', alignItems: 'center', justifyContent: 'center',
-                    }}>
-                      <svg width="20" height="20" viewBox="0 0 24 24" fill="none">
-                        <polygon points="12 2 22 8.5 22 15.5 12 22 2 15.5 2 8.5 12 2" fill="var(--accent)" opacity=".2"/>
-                        <polygon points="12 2 22 8.5 22 15.5 12 22 2 15.5 2 8.5 12 2" stroke="var(--accent)" strokeWidth="2" fill="none"/>
-                      </svg>
-                    </div>
                   </div>
                   <div style={{ textAlign: 'center' }}>
-                    <p style={{ fontWeight: 700, color: 'var(--ink)', fontSize: 16, fontFamily: 'var(--font-d)' }}>
-                      Removing background…
-                    </p>
-                    <p style={{ color: 'var(--ink-3)', fontSize: 13, marginTop: 4 }}>
-                      AI is analyzing your image
-                    </p>
+                    <p style={{ fontWeight: 700, color: 'var(--ink)', fontSize: 15, fontFamily: 'var(--font-d)' }}>Removing background…</p>
+                    <p style={{ color: 'var(--ink-3)', fontSize: 13, marginTop: 4 }}>AI is analyzing your image</p>
                   </div>
                 </div>
               )}
@@ -180,64 +134,35 @@ export default function UploadZone({ appState, originalUrl, onUpload, onRemoveBg
           {/* Action panel */}
           <div style={{ display: 'flex', flexDirection: 'column', gap: 14 }}>
             <div className="card" style={{ padding: 20 }}>
-              <p style={{
-                fontSize: 11, fontWeight: 800, letterSpacing: '0.07em',
-                textTransform: 'uppercase', color: 'var(--ink-3)', marginBottom: 16,
-              }}>Next Step</p>
-
-              <button
-                className="btn btn-primary"
-                onClick={onRemoveBg}
-                disabled={isProcessing}
-                style={{ width: '100%', padding: '14px', marginBottom: 10 }}
-              >
-                {isProcessing ? (
-                  <><div className="spinner" style={{ width: 16, height: 16 }} /> Processing…</>
-                ) : (
-                  <>
-                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none">
-                      <polygon points="12 2 22 8.5 22 15.5 12 22 2 15.5 2 8.5 12 2" fill="currentColor"/>
-                    </svg>
-                    Remove Background
-                  </>
-                )}
+              <p style={{ fontSize: 11, fontWeight: 800, letterSpacing: '0.07em', textTransform: 'uppercase', color: 'var(--ink-3)', marginBottom: 14 }}>
+                Next Step
+              </p>
+              <button className="btn btn-primary" onClick={onRemoveBg} disabled={isProcessing}
+                style={{ width: '100%', padding: '14px', marginBottom: 10 }}>
+                {isProcessing
+                  ? <><div className="spinner" style={{ width: 16, height: 16 }} /> Processing…</>
+                  : <><svg width="16" height="16" viewBox="0 0 24 24" fill="none"><polygon points="12 2 22 8.5 22 15.5 12 22 2 15.5 2 8.5 12 2" fill="currentColor"/></svg> Remove Background</>
+                }
               </button>
-
-              <button
-                className="btn btn-secondary"
-                onClick={() => inputRef.current?.click()}
-                disabled={isProcessing}
-                style={{ width: '100%', marginBottom: 8 }}
-              >
+              <button className="btn btn-secondary" onClick={() => inputRef.current?.click()} disabled={isProcessing} style={{ width: '100%', marginBottom: 8 }}>
                 Change Image
               </button>
-
-              <button
-                className="btn btn-ghost"
-                onClick={onReset}
-                disabled={isProcessing}
-                style={{ width: '100%' }}
-              >
+              <button className="btn btn-ghost" onClick={onReset} disabled={isProcessing} style={{ width: '100%' }}>
                 Cancel
               </button>
             </div>
 
-            {/* Info card */}
             <div style={{
-              padding: 18, borderRadius: 'var(--r-lg)',
+              padding: 16, borderRadius: 'var(--r-lg)',
               background: 'linear-gradient(135deg, var(--accent-light) 0%, #fff5ef 100%)',
               border: '1px solid rgba(232,101,42,0.15)',
             }}>
               <p style={{ fontSize: 11, fontWeight: 800, color: 'var(--accent)', textTransform: 'uppercase', letterSpacing: '0.07em', marginBottom: 10 }}>
                 How it works
               </p>
-              {[
-                'AI detects the subject automatically',
-                'Works on people, products & logos',
-                'Keeps original resolution',
-              ].map(t => (
-                <div key={t} style={{ display: 'flex', gap: 8, marginBottom: 8, alignItems: 'flex-start' }}>
-                  <span style={{ color: 'var(--accent)', fontSize: 14, lineHeight: 1.4 }}>✦</span>
+              {['AI detects the subject automatically', 'Works on people, products & logos', 'Keeps original resolution'].map(t => (
+                <div key={t} style={{ display: 'flex', gap: 8, marginBottom: 7, alignItems: 'flex-start' }}>
+                  <span style={{ color: 'var(--accent)', fontSize: 12, lineHeight: 1.5 }}>✦</span>
                   <span style={{ fontSize: 12, color: 'var(--accent-2)', lineHeight: 1.55, fontWeight: 500 }}>{t}</span>
                 </div>
               ))}
@@ -245,13 +170,7 @@ export default function UploadZone({ appState, originalUrl, onUpload, onRemoveBg
           </div>
         </div>
       )}
-
-      <style>{`
-        @keyframes pulse { 0%,100%{opacity:1} 50%{opacity:.4} }
-        @media (max-width: 680px) {
-          div[style*="gridTemplateColumns: '1fr 280px'"] { grid-template-columns: 1fr !important; }
-        }
-      `}</style>
+      <style>{`@keyframes pulse{0%,100%{opacity:1}50%{opacity:.4}}`}</style>
     </section>
   )
 }
