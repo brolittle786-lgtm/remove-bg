@@ -65,7 +65,7 @@ export default function App() {
     try {
       const formData = new FormData()
       formData.append('image', originalFile)
-    const res = await axios.post('https://remove-bg-xb76.onrender.com/api/remove-bg', formData, {
+      const res = await axios.post('/api/remove-bg', formData, {
         headers: { 'Content-Type': 'multipart/form-data' },
         timeout: 60000,
       })
