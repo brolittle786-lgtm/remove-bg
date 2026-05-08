@@ -65,7 +65,8 @@ export default function App() {
     try {
       const formData = new FormData()
       formData.append('image', originalFile)
-      const res = await axios.post('/api/remove-bg', formData, {
+      const BASE = import.meta.env.VITE_API_URL || ''
+const res = await axios.post(`${BASE}/api/remove-bg`, formData, {
         headers: { 'Content-Type': 'multipart/form-data' },
         timeout: 60000,
       })
